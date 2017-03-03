@@ -37,7 +37,7 @@ public class FileProcesser {
         }
 
         String ret = outString.toString();
-        if(numberOfOccurrences(ret, "Chr") != 1) {
+        if (numberOfOccurrences(ret, "Chr") != 1) {
             throw new AssertionError("Chromosome coordinates not found");
         }
         return outString.toString();
@@ -73,6 +73,7 @@ public class FileProcesser {
      * <p>
      * Some rows do not have information about nucleotide change (0.002% in given data).
      * They are not changed and are written to odd output file for further analysis.
+     * They are also written to usual output file with nucleotide change having value NA
      */
     static void writeFourColumns(String inputFileName, String outputFileName, String oddOutputFileName) {
         Path input = Paths.get(inputFileName);
@@ -88,19 +89,27 @@ public class FileProcesser {
                      new OutputStreamWriter(
                              new FileOutputStream(oddOutput.toString()),
                              StandardCharsets.UTF_8))) {
-            outWriter.println("gene.name\tcoordinates.in.chromosome\trs.index\tnucleotide.change");
+            outWriter.println("line.num\tgene.name\tcoordinates.in.chromosome\trs.index\tnucleotide.change");
             String curLine;
+            int counter = 0;
             while ((curLine = bufferedReader.readLine()) != null) {
+                counter++;
+
+                String nucleotideChange;
                 //if odd row
                 if (numberOfOccurrences(curLine, startOfNucleotideChange) == 0) {
+                    nucleotideChange = "NA";
                     oddWriter.println(curLine);
                 } else {
-                    StringBuilder sb = new StringBuilder();
-                    sb.append(getThreeColumns(curLine));
-                    sb.append("\t");
-                    sb.append(getCodonChange(curLine));
-                    outWriter.println(sb.toString());
+                    nucleotideChange = getCodonChange(curLine);
                 }
+                StringBuilder sb = new StringBuilder();
+                sb.append(Integer.toString(counter));
+                sb.append("\t");
+                sb.append(getThreeColumns(curLine));
+                sb.append("\t");
+                sb.append(nucleotideChange);
+                outWriter.println(sb.toString());
             }
         } catch (IOException e) {
             e.printStackTrace();
