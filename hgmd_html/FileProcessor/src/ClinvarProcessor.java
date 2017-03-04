@@ -3,6 +3,12 @@
  */
 public class ClinvarProcessor extends AbstractFileProcessor {
 
+    private final boolean isHg19;
+
+    public ClinvarProcessor(boolean isHg19) {
+        this.isHg19 = isHg19;
+    }
+
     @Override
     protected String getChromosome(String curLine) {
         return substring(0, '\t', curLine);
@@ -44,7 +50,7 @@ public class ClinvarProcessor extends AbstractFileProcessor {
      */
     @Override
     protected String getCDNA(String curLine) {
-        return "NA";
+        return NA;
     }
 
     @Override
@@ -52,5 +58,20 @@ public class ClinvarProcessor extends AbstractFileProcessor {
         int index = curLine.indexOf("CLNHGVS=");
         return substring(index + "CLNHGVS=".length(),
                 ';', curLine);
+    }
+
+    @Override
+    protected String getRefUsedForPosition(String curLine) {
+        return isHg19 ? "hg19" : "hg38";
+    }
+
+    @Override
+    protected String getCoordsInHg19(String curLine) {
+        return isHg19 ? getPositionInGenome(curLine) : NA;
+    }
+
+    @Override
+    protected String getCoordsInHg38(String curLine) {
+        return isHg19 ? NA : getPositionInGenome(curLine);
     }
 }

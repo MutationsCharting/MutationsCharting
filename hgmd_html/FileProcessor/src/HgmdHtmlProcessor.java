@@ -37,7 +37,7 @@ public class HgmdHtmlProcessor extends AbstractFileProcessor {
                 //if no rs
                 if (spaceCounter == 2
                         && curLine.charAt(i + 1) == ' ') {
-                    outString.append("\tNA");
+                    outString.append("\t" + NA);
                     break;
                 }
 
@@ -59,7 +59,7 @@ public class HgmdHtmlProcessor extends AbstractFileProcessor {
      */
     @Override
     protected String getRef(String curLine) {
-        return "NA";
+        return NA;
     }
 
     /**
@@ -67,7 +67,7 @@ public class HgmdHtmlProcessor extends AbstractFileProcessor {
      */
     @Override
     protected String getAlt(String curLine) {
-        return "NA";
+        return NA;
     }
 
     /**
@@ -78,7 +78,7 @@ public class HgmdHtmlProcessor extends AbstractFileProcessor {
     protected String getCDNA(String curLine) {
         final String startOfNucleotideChange = " c.";
         if (numberOfOccurrences(curLine, startOfNucleotideChange) == 0) {
-            return "NA";
+            return NA;
         }
 
         int index = curLine.indexOf(startOfNucleotideChange);
@@ -90,6 +90,33 @@ public class HgmdHtmlProcessor extends AbstractFileProcessor {
      */
     @Override
     protected String getGDNA(String curLine) {
-        return "NA";
+        return NA;
+    }
+
+    /**
+     * Initially we have no information at all about reference used in hgmd html.
+     * So, NA is returned.
+     *
+     * How will we get this value later?
+     * ClinVar and Hgmd_Html processed files are sorted with linux commands in script based on rs column.
+     * And then with two iterators we go concurrently through two files and find rs, that are met in both
+     * the files. We know this field for ClinVar, so based on ClinVar value we fill this field for hgmd html
+     * processed sorted file.
+     *
+     * getCoordsInHg19 and Hg38 are based approximately on the same principle
+     */
+    @Override
+    protected String getRefUsedForPosition(String curLine) {
+        return NA;
+    }
+
+    @Override
+    protected String getCoordsInHg19(String curLine) {
+        return NA;
+    }
+
+    @Override
+    protected String getCoordsInHg38(String curLine) {
+        return NA;
     }
 }

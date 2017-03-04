@@ -8,7 +8,20 @@ import java.nio.file.Paths;
  * Created by Aleksandr Tukallo on 04.03.17.
  */
 public abstract class AbstractFileProcessor implements FileProcessor {
-    protected final String HEADER = "line.num\tchr\tgene.name\tposition.in.genome\trs.index\tref\talt\tcDNA\tgDNA";
+
+    /**
+     * Comments about columns:
+     * position.in.genome are coordinates from the start of chromosome
+     * ref.used.for.pos is either hg19 or hg38. It is reference for which position.in.genome is counted
+     * coords.in.hg19 is position in genome for hg19
+     * coords.in.hg38 is position in genome for hg38
+     * <p>
+     * I extremely hope, that one of the columns coords.in.hg19, coords.in.hg38 is the same as position.in.genome
+     * column
+     */
+    protected final String HEADER =
+            "line.num\tchr\tgene.name\tposition.in.genome\trs.index\tref\talt\tcDNA\tgDNA\t" +
+                    "ref.used.for.pos\tcoords.in.hg19\tcoords.in.hg38";
     protected final String NA = "NA";
 
     @Override
@@ -31,7 +44,6 @@ public abstract class AbstractFileProcessor implements FileProcessor {
                 if (curLine.charAt(0) == '#') {
                     continue;
                 }
-
                 counter++;
                 outWriter.println(getLineToOutput(counter, curLine));
             }
@@ -49,7 +61,10 @@ public abstract class AbstractFileProcessor implements FileProcessor {
                 getRef(curLine) + "\t" +
                 getAlt(curLine) + "\t" +
                 getCDNA(curLine) + "\t" +
-                getGDNA(curLine);
+                getGDNA(curLine) + "\t" +
+                getRefUsedForPosition(curLine) + "\t" +
+                getCoordsInHg19(curLine) + "\t" +
+                getCoordsInHg38(curLine);
     }
 
     /**
@@ -74,16 +89,10 @@ public abstract class AbstractFileProcessor implements FileProcessor {
      * Method returns substring from beginIndex until terminateSymbol is met
      */
     protected String substring(int beginIndex, char terminateSymbol, String curLine) {
-//        System.out.println(Integer.toString(beginIndex) + " " + terminateSymbol + " " + curLine);
         StringBuilder sb = new StringBuilder();
-        try {
-            while (curLine.charAt(beginIndex) != terminateSymbol) {
-                sb.append(curLine.charAt(beginIndex));
-                beginIndex++;
-            }
-        } catch (StringIndexOutOfBoundsException e) {
-            int a = 5;
-            System.out.println("alsdjf;lasdfj");
+        while (curLine.charAt(beginIndex) != terminateSymbol) {
+            sb.append(curLine.charAt(beginIndex));
+            beginIndex++;
         }
         return sb.toString();
     }
@@ -103,6 +112,12 @@ public abstract class AbstractFileProcessor implements FileProcessor {
     protected abstract String getCDNA(String curLine);
 
     protected abstract String getGDNA(String curLine);
+
+    protected abstract String getRefUsedForPosition(String curLine);
+
+    protected abstract String getCoordsInHg19(String curLine);
+
+    protected abstract String getCoordsInHg38(String curLine);
 
     //method is used to check code invariants
     protected static int numberOfOccurrences(String text, String substring) {
