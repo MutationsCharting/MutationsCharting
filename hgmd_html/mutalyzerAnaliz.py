@@ -20,10 +20,10 @@ def stringOfNC(tuple):
         for i in range(len(tuple)):
             tup = re.findall(r"(\d+):", str(tuple[i]))
             index = int(tup[0])
+            newInfo = re.findall(r"((\d*)(del|dup|ins|.>)(.*))", tuple[i])
             try:
                 if int(tup[0]) in map:
-                    newInfo = re.findall(r"((del|dup|ins|.>)(.*))", tuple[i])
-                    map[index] = "{}, {}".format(map[index], newInfo[0][0][:-1])
+                    map[index] = "{}, {}".format(map[index], newInfo[0][3][:-1])
                 else:
                     map[index] = tuple[i][:-1]
             except IndexError:
@@ -34,8 +34,8 @@ def stringOfNC(tuple):
         return s[:-1]
 
 
-def main(fileOut, fileIn):
-    with open(fileOut, "w") as writer, open(fileIn, "r") as data, open("hgmd_html_processed.txt", "r") as f:
+def main(fileOut, fileIn, firstData):
+    with open(fileOut, "w") as writer, open(fileIn, "r") as data, open(firstData, "r") as f:
         writer.write("{}\t{}\t{}\t{}\t{}\n".format("index", "rs_coordinats", "coordinats_hgmd",
                                            "hg19","hg38"))
         patternRs = r"(rs\d+)"
@@ -54,11 +54,11 @@ def main(fileOut, fileIn):
                 if (i != int(str(re.findall(r"^(\d*)", stringInBase)[0]))):
                     continue
                 coordinates = re.findall(r"(NC[^,\]]*)+", stringInBase)
-                st = "{}\t{}\t{}\t{}\n".format(i, rs[0], chr[0], stringOfNC(coordinates))
-                if (stringOfNC(coordinates) == "NA\tNA"):
+                st = "{}\t{}\t{}\t{}\n".format(i, rs[0], chr[0], stringOfNC(coordinates, chr[0]))
+                if (stringOfNC(coordinates,chr[0]) == "NA\tNA"):
                     naCount += 1
                 writer.write(st)
         print("all = {}, NA = {}".format(str(totalCount), str(naCount)))
 
 if __name__ == '__main__':
-    main(args.output, args.input)
+    main(args.output, args.input,"temporary/hgmd_html_processed.txt")
