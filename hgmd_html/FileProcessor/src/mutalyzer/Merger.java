@@ -32,10 +32,11 @@ public class Merger {
 
 //            todo mb write not in O(n^2) but in O(n)
             String curMutLine;
-            int counter = 1;
+            int counter = 0;
             while ((curMutLine = brMutalyzer.readLine()) != null) {
-                if (counter % 500 == 0)
-                    break;
+                if (counter % 500 == 0) {
+                    System.out.println(counter);;
+                }
                 counter++;
 
                 try (BufferedReader brHgmd = Files.newBufferedReader(inputHgmd, StandardCharsets.UTF_8)) {
@@ -53,7 +54,7 @@ public class Merger {
 
                             //now should append hg38 coordinates
                             index = skipTabs(curMutLine, 4);
-                            sb.append("\t" + substring(index, '\t', curMutLine));
+                            sb.append("\t").append(substring(index, '\t', curMutLine));
 
                             outWriter.println(sb.toString());
                             break;

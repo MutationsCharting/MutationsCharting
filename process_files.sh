@@ -30,3 +30,8 @@ rm converter/*.class
 rm separator/*.class
 rm utils/*.class
 echo "Class files cleaned"
+
+# Sort data from mutalyzer obtained by Kostyan
+cd ../../
+sort -t $'\t' -k 2,2 -r dataBaseFromMutalyzer.txt > data_base_from_mutalyzer_sorted.txt
+
