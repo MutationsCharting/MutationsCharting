@@ -43,8 +43,11 @@ def main(start, end, filename):
             chr = re.findall(patternChr, line)
             if (rs != []):
                 print(i)
-                data = urllib.request.urlopen("https://mutalyzer.nl/json/getdbSNPDescriptions?rs_id=" + rs[0]).read()
-                writer.write(str(i) + ' ' + str(data) + "\n")
+                try:
+                    data = urllib.request.urlopen("https://mutalyzer.nl/json/getdbSNPDescriptions?rs_id=" + rs[0]).read()
+                    writer.write(str(i) + ' ' + str(data) + "\n")
+                except HTTPError:
+                    print('Shit!')
             # rs = re.findall(patternRs, line)
             # chr = re.findall(patternChr, line)
             # if (rs != []):
