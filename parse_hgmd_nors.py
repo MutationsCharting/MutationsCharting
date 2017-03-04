@@ -2,6 +2,7 @@ from glob import glob
 import re
 from tqdm import tqdm
 
+
 def prepare_data_for_liftover(hgmd, query_file):
     with open(hgmd, 'r') as in_f, open(query_file, 'w') as out_f:
         next(in_f)  # Skip header
@@ -18,7 +19,7 @@ def prepare_data_for_liftover(hgmd, query_file):
 
 def convert_liftover_results_to_initial_format(liftover_results, initial_file, result_file):
     with open(liftover_results, 'r') as in_f1, open(initial_file, 'r') as in_f2, open(result_file, 'w') as out_f:
-        out_f.write(next(in_f2)) # Write header
+        out_f.write(next(in_f2))  # Write header
         for line1, line2 in zip(in_f1, in_f2):
             _, pos = line1.strip().split(':')
             pos = pos.split('-')
@@ -63,5 +64,5 @@ if __name__ == '__main__':
     #                       'hgmd_html/temporary/query_file.txt')
     # convert_liftover_results_to_initial_format('hgmd_html/temporary/hglft_genome_1170_b07cb0.bed',
     #                                            'hgmd_html/temporary/hgmd_html_processed_sorted_nors.txt',
-    #                                            'hgmd_html/temporary/hgmd_html_processed_sorted_final.txt')
-    check_coordinates('hgmd_html/temporary/hgmd_html_processed_sorted_final.txt')
+    #                                            'hgmd_html/temporary/hgmd_html_processed_sorted_nors_final.txt')
+    check_coordinates('hgmd_html/temporary/hgmd_html_processed_sorted_nors_final.txt')
