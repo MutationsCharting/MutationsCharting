@@ -1,3 +1,9 @@
+package converter;
+
+import static utils.ParserUtils.NA;
+import static utils.ParserUtils.skipTabs;
+import static utils.ParserUtils.substring;
+
 /**
  * Created by Aleksandr Tukallo on 03.03.17.
  */
@@ -43,6 +49,14 @@ public class ClinvarProcessor extends AbstractFileProcessor {
     protected String getAlt(String curLine) {
         int index = skipTabs(curLine, 4);
         return substring(index, '\t', curLine);
+    }
+
+    /**
+     * No such info in vcf
+     */
+    @Override
+    protected String getCodonMutation(String curLine) {
+        return NA;
     }
 
     /**

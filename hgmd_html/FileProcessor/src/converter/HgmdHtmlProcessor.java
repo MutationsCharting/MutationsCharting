@@ -1,3 +1,9 @@
+package converter;
+
+import static utils.ParserUtils.NA;
+import static utils.ParserUtils.numberOfOccurrences;
+import static utils.ParserUtils.substring;
+
 /**
  * Created by Aleksandr Tukallo on 03.03.17.
  */
@@ -37,7 +43,7 @@ public class HgmdHtmlProcessor extends AbstractFileProcessor {
                 //if no rs
                 if (spaceCounter == 2
                         && curLine.charAt(i + 1) == ' ') {
-                    outString.append("\t" + NA);
+                    outString.append(NA);
                     break;
                 }
 
@@ -71,6 +77,26 @@ public class HgmdHtmlProcessor extends AbstractFileProcessor {
     }
 
     /**
+     * Codon mutation is returned only if no rs in the file.
+     * They will be used later to determine reference genome
+     */
+    @Override
+    protected String getCodonMutation(String curLine) {
+        if (getRsIndex(curLine).equals(NA)) {
+            int spaceCounter = 0;
+            int lastIndex = 0;
+            while(spaceCounter < 4) {
+                lastIndex = curLine.indexOf(" ", lastIndex);
+                lastIndex += " ".length();
+                spaceCounter++;
+            }
+            return substring(lastIndex, ' ', curLine);
+        } else {
+            return NA;
+        }
+    }
+
+    /**
      * @param curLine String in which nucleotide change is searched for
      * @return String with nucleotide change is returned if found, else NA
      */
@@ -96,13 +122,13 @@ public class HgmdHtmlProcessor extends AbstractFileProcessor {
     /**
      * Initially we have no information at all about reference used in hgmd html.
      * So, NA is returned.
-     *
+     * <p>
      * How will we get this value later?
      * ClinVar and Hgmd_Html processed files are sorted with linux commands in script based on rs column.
      * And then with two iterators we go concurrently through two files and find rs, that are met in both
      * the files. We know this field for ClinVar, so based on ClinVar value we fill this field for hgmd html
      * processed sorted file.
-     *
+     * <p>
      * getCoordsInHg19 and Hg38 are based approximately on the same principle
      */
     @Override

@@ -1,3 +1,5 @@
+package converter;
+
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -16,13 +18,15 @@ public abstract class AbstractFileProcessor implements FileProcessor {
      * coords.in.hg19 is position in genome for hg19
      * coords.in.hg38 is position in genome for hg38
      * <p>
+     * Ref and Alt fields are filled only in ClinVar
+     * Codon mutation field is filled only in hgmd
+     * <p>
      * I extremely hope, that one of the columns coords.in.hg19, coords.in.hg38 is the same as position.in.genome
      * column
      */
     protected final String HEADER =
-            "line.num\tchr\tgene.name\tposition.in.genome\trs.index\tref\talt\tcDNA\tgDNA\t" +
+            "line.num\tchr\tgene.name\tposition.in.genome\trs.index\tref\talt\tcodon.mutation\tcDNA\tgDNA\t" +
                     "ref.used.for.pos\tcoords.in.hg19\tcoords.in.hg38";
-    protected final String NA = "NA";
 
     @Override
     public void processFile(String inputFileName, String outputFileName) {
@@ -60,41 +64,12 @@ public abstract class AbstractFileProcessor implements FileProcessor {
                 getRsIndex(curLine) + "\t" +
                 getRef(curLine) + "\t" +
                 getAlt(curLine) + "\t" +
+                getCodonMutation(curLine) + "\t" +
                 getCDNA(curLine) + "\t" +
                 getGDNA(curLine) + "\t" +
                 getRefUsedForPosition(curLine) + "\t" +
                 getCoordsInHg19(curLine) + "\t" +
                 getCoordsInHg38(curLine);
-    }
-
-    /**
-     * Method skips n tabs from start
-     *
-     * @param curLine line to skip tabs in
-     * @param n       number of tabs to skip
-     * @return index of first element after n'th tab is returned
-     */
-    protected int skipTabs(String curLine, int n) {
-        int counter = 0;
-        int index = 0;
-        while (counter < n) {
-            index = curLine.indexOf("\t", index);
-            index += "\t".length();
-            counter++;
-        }
-        return index;
-    }
-
-    /**
-     * Method returns substring from beginIndex until terminateSymbol is met
-     */
-    protected String substring(int beginIndex, char terminateSymbol, String curLine) {
-        StringBuilder sb = new StringBuilder();
-        while (curLine.charAt(beginIndex) != terminateSymbol) {
-            sb.append(curLine.charAt(beginIndex));
-            beginIndex++;
-        }
-        return sb.toString();
     }
 
     protected abstract String getChromosome(String curLine);
@@ -109,6 +84,8 @@ public abstract class AbstractFileProcessor implements FileProcessor {
 
     protected abstract String getAlt(String curLine);
 
+    protected abstract String getCodonMutation(String curLine);
+
     protected abstract String getCDNA(String curLine);
 
     protected abstract String getGDNA(String curLine);
@@ -118,19 +95,4 @@ public abstract class AbstractFileProcessor implements FileProcessor {
     protected abstract String getCoordsInHg19(String curLine);
 
     protected abstract String getCoordsInHg38(String curLine);
-
-    //method is used to check code invariants
-    protected static int numberOfOccurrences(String text, String substring) {
-        int count = 0;
-        int lastIndex = 0;
-
-        while (lastIndex != -1) {
-            lastIndex = text.indexOf(substring, lastIndex);
-            if (lastIndex != -1) {
-                count++;
-                lastIndex += substring.length();
-            }
-        }
-        return count;
-    }
 }

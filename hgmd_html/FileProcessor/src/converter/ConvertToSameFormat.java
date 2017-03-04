@@ -1,3 +1,5 @@
+package converter;
+
 /**
  * Created by Aleksandr Tukallo on 03.03.17.
  */
@@ -6,17 +8,17 @@ public class ConvertToSameFormat {
         HgmdHtmlProcessor hgmd = new HgmdHtmlProcessor();
         hgmd.processFile(
                 "./../../hgmd_html.txt",
-                "./../../hgmd_html_processed.txt");
+                "./../../temporary/hgmd_html_processed.txt");
 
         ClinvarProcessor clinvarHg38 = new ClinvarProcessor(false);
         clinvarHg38.processFile(
                 "./../../clinvar_hg38.vcf",
-                "./../../clinvar_hg38_processed.txt");
+                "./../../temporary/clinvar_hg38_processed.txt");
 
         ClinvarProcessor clinvarHg19 = new ClinvarProcessor(true);
         clinvarHg19.processFile(
                 "./../../clinvar_hg19.vcf",
-                "./../../clinvar_hg19_processed.txt");
+                "./../../temporary/clinvar_hg19_processed.txt");
     }
 
 }
