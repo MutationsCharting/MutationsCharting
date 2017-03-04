@@ -1,4 +1,6 @@
 
+clinvar*
+temporary/
 .idea/
 out/
 *.iml
