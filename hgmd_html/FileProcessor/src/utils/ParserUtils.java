@@ -45,7 +45,7 @@ public class ParserUtils {
      */
     public static String substring(int beginIndex, char terminateSymbol, String curLine) {
         StringBuilder sb = new StringBuilder();
-        while (curLine.charAt(beginIndex) != terminateSymbol) {
+        while (beginIndex != curLine.length() && curLine.charAt(beginIndex) != terminateSymbol) {
             sb.append(curLine.charAt(beginIndex));
             beginIndex++;
         }

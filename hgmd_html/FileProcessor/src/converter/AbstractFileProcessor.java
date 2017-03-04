@@ -24,7 +24,7 @@ public abstract class AbstractFileProcessor implements FileProcessor {
      * I extremely hope, that one of the columns coords.in.hg19, coords.in.hg38 is the same as position.in.genome
      * column
      */
-    protected final String HEADER =
+    public static final String HEADER =
             "line.num\tchr\tgene.name\tposition.in.genome\trs.index\tref\talt\tcodon.mutation\tcDNA\tgDNA\t" +
                     "ref.used.for.pos\tcoords.in.hg19\tcoords.in.hg38";
 
