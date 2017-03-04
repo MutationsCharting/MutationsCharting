@@ -44,7 +44,7 @@ def main(start, end, filename):
             if (rs != []):
                 print(i)
                 data = urllib.request.urlopen("https://mutalyzer.nl/json/getdbSNPDescriptions?rs_id=" + rs[0]).read()
-                writer.write(str(data) + "\n")
+                writer.write(str(i) + ' ' + str(data) + "\n")
             # rs = re.findall(patternRs, line)
             # chr = re.findall(patternChr, line)
             # if (rs != []):
