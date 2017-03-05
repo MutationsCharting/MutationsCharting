@@ -23,7 +23,7 @@ public class ClinvarProcessor extends AbstractFileProcessor {
     @Override
     protected String getGeneName(String curLine) {
         int index = curLine.indexOf("GENEINFO=");
-        return substring(index + "GENEINFO=".length(),
+        return index == -1 ? NA : substring(index + "GENEINFO=".length(),
                 ':', curLine);
     }
 
@@ -70,7 +70,7 @@ public class ClinvarProcessor extends AbstractFileProcessor {
     @Override
     protected String getGDNA(String curLine) {
         int index = curLine.indexOf("CLNHGVS=");
-        return substring(index + "CLNHGVS=".length(),
+        return index == -1 ? NA : substring(index + "CLNHGVS=".length(),
                 ';', curLine);
     }
 
