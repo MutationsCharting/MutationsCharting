@@ -1,0 +1,7 @@
+
+clinvar*
+temporary/
+.idea/
+out/
+*.iml
+hgmd_html_processed_odd.txt
