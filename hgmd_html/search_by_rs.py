@@ -6,6 +6,8 @@ path_mutalyizer = "dataBaseFromMutalyzer.txt"
 path_clinvar = "temporary/clinvar_hg19_processed_sorted.txt"
 off = 0
 
+
+
 parser = argparse.ArgumentParser(description="Description")
 
 
